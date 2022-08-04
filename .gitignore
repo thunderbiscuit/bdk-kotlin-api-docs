@@ -36,8 +36,7 @@ bin/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
-.vscode/
+deploy.sh
 
 ### Mac OS ###
 .DS_Store

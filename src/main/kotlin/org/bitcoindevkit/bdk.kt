@@ -125,3 +125,199 @@ sealed class BlockchainConfig {
     /** Esplora client */
     data class Esplora(val config: EsploraConfig) : BlockchainConfig()
 }
+
+/**
+ * TBD
+ */
+data class TransactionDetails (
+    var fee: ULong?,
+    var received: ULong,
+    var sent: ULong,
+    var txid: String
+)
+
+/**
+ * TBD
+ */
+class Blockchain(
+    config: BlockchainConfig
+) {
+    fun broadcast(signedPsbt: PartiallySignedBitcoinTransaction): String {
+        return "String"
+    }
+}
+
+/**
+ * TBD
+ */
+class PartiallySignedBitcoinTransaction(psbtBase64: String) {
+    fun serialize(): String {}
+    fun txid(): String {}
+}
+
+/**
+ * TBD
+ */
+data class OutPoint (
+    var txid: String,
+    var vout: UInt
+)
+
+/**
+ * TBD
+ */
+data class TxOut (
+    var value: ULong,
+    var address: String
+)
+
+/**
+ * TBD
+ */
+data class LocalUtxo (
+    var outpoint: OutPoint,
+    var txout: TxOut,
+    var keychain: KeychainKind,
+    var isSpent: Boolean
+)
+
+/**
+ * TBD
+ */
+enum class KeychainKind {
+    EXTERNAL,
+    INTERNAL,
+}
+
+/**
+ * TBD
+ */
+sealed class Transaction {
+    data class Unconfirmed(val details: TransactionDetails) : Transaction()
+    data class Confirmed(val details: TransactionDetails, val confirmation: BlockTime) : Transaction()
+}
+
+/**
+ * TBD
+ */
+data class BlockTime (
+    var height: UInt,
+    var timestamp: ULong,
+)
+
+/**
+ * TBD
+ */
+class Wallet(
+    descriptor: String,
+    changeDescriptor: String,
+    network: Network,
+    databaseConfig: DatabaseConfig,
+) {
+    /**  */
+    fun getAddress(addressIndex: AddressIndex): AddressInfo {}
+
+    /**  */
+    fun getBalance(): ULong {}
+
+    /**  */
+    fun sign(psbt: PartiallySignedBitcoinTransaction): Boolean {}
+
+    /**  */
+    fun getTransactions(): List<Transaction> {}
+
+    /**  */
+    fun getNetwork(): Network {}
+
+    /**  */
+    fun sync(blockchain: Blockchain, progress: Progress?) {}
+
+    /**  */
+    fun listUnspent(): List<LocalUtxo> {}
+}
+
+/**
+ * TBD
+ */
+class Progress {
+    fun update(progress: Float, message: String?) {}
+}
+
+/**
+ * TBD
+ */
+data class ExtendedKeyInfo (
+    var mnemonic: String,
+    var xprv: String,
+    var fingerprint: String
+)
+
+/**
+ * TBD
+ */
+class TxBuilder() {
+    /**  */
+    fun addRecipient(address: String, amount: ULong): TxBuilder {}
+
+    /**  */
+    fun addUnspendable(unspendable: OutPoint): TxBuilder {}
+
+    /**  */
+    fun addUtxo(outpoint: OutPoint): TxBuilder {}
+
+    /**  */
+    fun addUtxos(outpoints: List<OutPoint>): TxBuilder {}
+
+    /**  */
+    fun doNotSpendChange(): TxBuilder {}
+
+    /**  */
+    fun manuallySelectedOnly(): TxBuilder {}
+
+    /**  */
+    fun onlySpendChange(): TxBuilder {}
+
+    /**  */
+    fun unspendable(unspendable: List<OutPoint>): TxBuilder {}
+
+    /**  */
+    fun feeRate(satPerVbyte: Float): TxBuilder {}
+
+    /**  */
+    fun feeAbsolute(feeAmount: ULong): TxBuilder {}
+
+    /**  */
+    fun drainWallet(): TxBuilder {}
+
+    /**  */
+    fun drainTo(address: String): TxBuilder {}
+
+    /**  */
+    fun enableRbf(): TxBuilder {}
+
+    /**  */
+    fun enableRbfWithSequence(nsequence: UInt): TxBuilder {}
+
+    /**  */
+    fun addData(data: List<UByte>): TxBuilder {}
+
+    /**  */
+    fun finish(wallet: Wallet): PartiallySignedBitcoinTransaction {}
+}
+
+/**
+ * TBD
+ */
+class BumpFeeTxBuilder() {
+    /**  */
+    fun allowShrinking(address: String): BumpFeeTxBuilder {}
+
+    /**  */
+    fun enableRbf(): BumpFeeTxBuilder {}
+
+    /**  */
+    fun enableRbfWithSequence(nsequence: UInt): BumpFeeTxBuilder {}
+
+    /**  */
+    fun finish(wallet: Wallet): PartiallySignedBitcoinTransaction {}
+}
