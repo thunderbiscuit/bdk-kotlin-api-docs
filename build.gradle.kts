@@ -2,6 +2,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.7.0"
+
+    // API docs
+    id("org.jetbrains.dokka") version "1.7.10"
 }
 
 group = "org.example"
@@ -21,4 +24,14 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
+    dokkaSourceSets {
+        named("main") {
+            moduleName.set("bdk-kotlin")
+            moduleVersion.set("0.8.0")
+            includes.from("Module.md")
+        }
+    }
 }
