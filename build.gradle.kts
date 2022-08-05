@@ -30,7 +30,7 @@ tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
     dokkaSourceSets {
         named("main") {
             moduleName.set("bdk-kotlin")
-            moduleVersion.set("0.8.0")
+            moduleVersion.set("0.8.2")
             includes.from("Module.md")
         }
     }
